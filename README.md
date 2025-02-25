@@ -20,7 +20,7 @@ Asegúrate de tener instalado **Python 3.8+** y **pip**.
 
 ### **2️⃣ Clonar el Repositorio**
 ```bash
-git clone https://github.com/tu_usuario/blockchain-flask
+git clone https://github.com/SebastianTorres12/blockchain_app.git
 cd blockchain-flask
 ```
 
