@@ -83,6 +83,13 @@ Se usa para exponer la funcionalidad de la blockchain a través de endpoints RES
 - **`/validate`** (GET): Verifica la integridad de la blockchain.
 - **`/modify_block`** (POST): Modifica un bloque específico para pruebas de seguridad.
 
+### **📌 Exportar colección de POSTMAN**
+Si cuentas con Postman en tu qequipo puedes descargar e importar el archivo:
+```bash
+Blockchain.postman_collection.json
+```
+Este archivo cargará una colección en POSTMAN con los endpoints y cuerpos necesarios para las peticiones a la API.
+
 ### **📌 Visualización Interactiva con D3.js**
 Este módulo permite visualizar la blockchain en tiempo real con D3.js.
 
