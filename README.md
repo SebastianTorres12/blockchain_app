@@ -20,7 +20,7 @@ Asegúrate de tener instalado **Python 3.8+** y **pip**.
 
 ### **2️⃣ Clonar el Repositorio**
 ```bash
-git clone https://github.com/tu_usuario/blockchain-flask
+git clone https://github.com/SebastianTorres12/blockchain_app.git
 cd blockchain-flask
 ```
 
@@ -111,7 +111,7 @@ python app.py
 ### **2️⃣ Cómo funciona**
 - Cada **bloque es un nodo** en el gráfico.
 - Se conecta con el anterior **si los hashes coinciden**.
-- Si hay inconsistencias, **el bloque aparecerá aislado**.
+- Si hay inconsistencias, **el bloque aparecerá destacado de un color distinto**.
 - Puedes **hacer clic en los nodos** para ver detalles en el panel lateral.
 
 ### **Ejemplo de visualización:**
