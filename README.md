@@ -119,6 +119,36 @@ python app.py
 🔴 Bloques desconectados = **Blockchain alterada** ❌
 
 ---
+## 🎯 Conceptos Claves de Blockchain
+
+### 🔹 **Bloques y Transacciones**
+
+Cada bloque en la blockchain contiene un conjunto de transacciones. Estas transacciones representan el envío de valores o información entre usuarios.
+
+- **Transacción**: Representa la acción de enviar datos o valores de un emisor a un receptor.
+- **Bloque**: Contiene múltiples transacciones agrupadas y validadas mediante un proceso de minería.
+- **Previous Hash**: Cada bloque contiene un hash del bloque anterior, lo que garantiza la integridad de la cadena.
+
+### 🔹 **Minado y Prueba de Trabajo (PoW)**
+
+El proceso de **minado** en la blockchain consiste en resolver un problema matemático complejo para validar y agregar nuevos bloques a la cadena. En este proyecto, se usa un método de **Prueba de Trabajo (PoW)** para garantizar la seguridad de la red:
+
+1. Se genera un nuevo bloque con las transacciones pendientes.
+2. Se busca un **número de prueba (proof)** que satisfaga una condición establecida (por ejemplo, un hash que empiece con ciertos ceros).
+3. Una vez encontrada la prueba, se añade el bloque a la blockchain y se comparte con la red.
+
+Este método **asegura que cada bloque requiere un esfuerzo computacional para ser validado**, evitando ataques y alteraciones maliciosas.
+
+### 🔹 **Validación de Blockchain**
+
+Para verificar que la blockchain no ha sido manipulada, se realiza un proceso de validación que revisa dos aspectos clave:
+
+- **El `previous_hash` de cada bloque debe coincidir con el `hash_actual` del bloque anterior.**
+- **El proceso de minería (PoW) debe ser válido y cumplir con las condiciones establecidas.**
+
+Si alguna de estas condiciones falla, se considera que la blockchain ha sido alterada.
+
+---
 
 ## 🏆 Contribuciones
 Si deseas mejorar este proyecto:
