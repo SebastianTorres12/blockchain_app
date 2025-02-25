@@ -1,13 +1,13 @@
-# 📌 Blockchain con Flask y Visualización con NetworkX
+# 📌 Blockchain con Flask y Visualización con D3.js
 
 ## 📖 Descripción del Proyecto
-Este proyecto es una implementación de una **blockchain simple en Python** con una API en **Flask** para gestionar transacciones y bloques. También incluye un **visualizador interactivo con D3.js, NetworkX y Matplotlib** para representar gráficamente la blockchain.
+Este proyecto es una implementación de una **blockchain simple en Python** con una API en **Flask** para gestionar transacciones y bloques. También incluye un **visualizador interactivo con D3.js** para representar gráficamente la blockchain.
 
 ## 🚀 Características principales
 - **Creación y validación de una blockchain**.
 - **API Flask para interactuar con la blockchain** (agregar transacciones, minar bloques, validar la cadena).
 - **Modificación de bloques con recálculo de hash**.
-- **Visualización en tiempo real** con D3.js y NetworkX.
+- **Visualización en tiempo real** con D3.js.
 - **Detección de inconsistencias** en la blockchain.
 - **Panel lateral interactivo para mostrar detalles de múltiples bloques**.
 
@@ -46,8 +46,6 @@ Este proyecto utiliza varias librerías importantes para facilitar la construcci
 
 - **Flask**: Se usa para crear una API REST simple que permite interactuar con la blockchain a través de endpoints. Permite realizar operaciones como agregar transacciones, minar bloques y validar la cadena de bloques.
 - **Requests**: Se utiliza para hacer llamadas HTTP a la API desde otros scripts o herramientas externas, permitiendo la prueba de los endpoints.
-- **NetworkX**: Facilita la representación de la blockchain como un grafo dirigido, permitiendo ver cómo se conectan los bloques.
-- **Matplotlib**: Usada para visualizar gráficamente la blockchain generada por NetworkX.
 - **D3.js**: Permite crear visualizaciones interactivas en la interfaz web con gráficos dinámicos.
 - **Hashlib**: Se emplea para generar hashes SHA-256 de los bloques, asegurando la integridad de la cadena.
 - **JSON**: Se usa para serializar y deserializar los datos de la blockchain y permitir su envío en las respuestas de la API.
@@ -83,6 +81,13 @@ Se usa para exponer la funcionalidad de la blockchain a través de endpoints RES
 - **`/validate`** (GET): Verifica la integridad de la blockchain.
 - **`/modify_block`** (POST): Modifica un bloque específico para pruebas de seguridad.
 
+### **📌 Exportar colección de POSTMAN**
+Si cuentas con Postman en tu equipo puedes descargar e importar el archivo:
+```bash
+Blockchain.postman_collection.json
+```
+Este archivo cargará una colección en POSTMAN con los endpoints y cuerpos necesarios para las peticiones a la API.
+
 ### **📌 Visualización Interactiva con D3.js**
 Este módulo permite visualizar la blockchain en tiempo real con D3.js.
 
@@ -101,7 +106,7 @@ Este módulo permite visualizar la blockchain en tiempo real con D3.js.
 ---
 
 ## 📊 Visualizador de Blockchain
-El visualizador usa **D3.js, NetworkX y Matplotlib** para graficar los bloques de la blockchain.
+El visualizador usa **D3.js** para graficar los bloques de la blockchain.
 
 ### **1️⃣ Ejecutar el Visualizador**
 ```bash
@@ -120,37 +125,6 @@ python app.py
 
 ---
 
-## 🎯 Conceptos Claves de Blockchain
-
-### 🔹 **Bloques y Transacciones**
-
-Cada bloque en la blockchain contiene un conjunto de transacciones. Estas transacciones representan el envío de valores o información entre usuarios.
-
-- **Transacción**: Representa la acción de enviar datos o valores de un emisor a un receptor.
-- **Bloque**: Contiene múltiples transacciones agrupadas y validadas mediante un proceso de minería.
-- **Previous Hash**: Cada bloque contiene un hash del bloque anterior, lo que garantiza la integridad de la cadena.
-
-### 🔹 **Minado y Prueba de Trabajo (PoW)**
-
-El proceso de **minado** en la blockchain consiste en resolver un problema matemático complejo para validar y agregar nuevos bloques a la cadena. En este proyecto, se usa un método de **Prueba de Trabajo (PoW)** para garantizar la seguridad de la red:
-
-1. Se genera un nuevo bloque con las transacciones pendientes.
-2. Se busca un **número de prueba (proof)** que satisfaga una condición establecida (por ejemplo, un hash que empiece con ciertos ceros).
-3. Una vez encontrada la prueba, se añade el bloque a la blockchain y se comparte con la red.
-
-Este método **asegura que cada bloque requiere un esfuerzo computacional para ser validado**, evitando ataques y alteraciones maliciosas.
-
-### 🔹 **Validación de Blockchain**
-
-Para verificar que la blockchain no ha sido manipulada, se realiza un proceso de validación que revisa dos aspectos clave:
-
-- **El `previous_hash` de cada bloque debe coincidir con el `hash_actual` del bloque anterior.**
-- **El proceso de minería (PoW) debe ser válido y cumplir con las condiciones establecidas.**
-
-Si alguna de estas condiciones falla, se considera que la blockchain ha sido alterada.
-
----
-
 ## 🏆 Contribuciones
 Si deseas mejorar este proyecto:
 1. Haz un fork del repositorio.
@@ -158,4 +132,3 @@ Si deseas mejorar este proyecto:
 3. Envía un Pull Request.
 
 ¡Gracias por tu interés en este proyecto! 🚀
-
