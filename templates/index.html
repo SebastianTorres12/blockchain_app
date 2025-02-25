@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Blockchain</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+        }
+        #sidebar {
+            width: 350px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-right: 3px solid #ddd;
+            text-align: left;
+            box-shadow: 2px 0px 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .block-details {
+            background: #007bff;
+            color: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            position: relative;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-size: 14px;
+        }
+        .block-details button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .block-details button:hover {
+            background: #c82333;
+        }
+        #chart-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #chart {
+            width: 80%;
+            height: 500px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .selected {
+            stroke: yellow;
+            stroke-width: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <h2>Detalles del Bloque</h2>
+        <div id="block-info">Haz clic en un bloque para ver los detalles</div>
+    </div>
+
+    <div id="chart-container">
+        <button onclick="fetchBlockchain()">Actualizar Blockchain</button>
+        <svg id="chart"></svg>
+    </div>
+
+    <script>
+        async function fetchBlockchain() {
+            const response = await fetch('/chain');
+            const data = await response.json();
+            drawBlockchain(data.chain);
+        }
+
+        function drawBlockchain(chain) {
+            const svg = d3.select("#chart");
+            svg.selectAll("*").remove();
+            const blockInfo = document.getElementById("block-info");
+
+            const nodes = chain.map((block, index) => ({
+                id: index + 1,
+                transactions: block.transactions.length,
+                valid: index === 0 || block.previous_hash === chain[index - 1].hash,
+                hash: block.hash || "N/A",
+                prevHash: block.previous_hash || "N/A"
+            }));
+
+            const links = nodes.slice(1).map((_, i) => ({
+                source: nodes[i],
+                target: nodes[i + 1],
+                valid: nodes[i + 1].valid
+            }));
+
+            const simulation = d3.forceSimulation(nodes)
+                .force("link", d3.forceLink(links).id(d => d.id).distance(150))
+                .force("charge", d3.forceManyBody().strength(-500))
+                .force("center", d3.forceCenter(400, 250));
+
+            const svgGroup = svg.append("g");
+
+            const link = svgGroup.append("g")
+                .selectAll("line")
+                .data(links)
+                .enter().append("line")
+                .style("stroke", d => d.valid ? "#007bff" : "red")
+                .style("stroke-width", 3);
+
+            const node = svgGroup.append("g")
+                .selectAll("g")
+                .data(nodes)
+                .enter().append("g")
+                .call(d3.drag()
+                    .on("start", dragStarted)
+                    .on("drag", dragged)
+                    .on("end", dragEnded));
+
+            node.append("circle")
+                .attr("r", 35)
+                .attr("fill", d => d.valid ? "#28a745" : "red")
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 2)
+                .on("click", (event, d) => showBlockDetails(d));
+
+            node.append("text")
+                .attr("dy", 5)
+                .attr("text-anchor", "middle")
+                .attr("fill", "white")
+                .attr("font-size", "14px")
+                .attr("font-weight", "bold")
+                .text(d => `B${d.id}`);
+
+            simulation.on("tick", () => {
+                node.attr("transform", d => `translate(${d.x}, ${d.y})`);
+                link.attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+            });
+
+            function dragStarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragEnded(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+
+            function showBlockDetails(block) {
+                const blockDiv = document.createElement("div");
+                blockDiv.classList.add("block-details");
+                blockDiv.innerHTML = `
+                    <button onclick="this.parentElement.remove()">X</button>
+                    <strong>Bloque ${block.id}</strong><br>
+                    🔗 <strong>Hash:</strong> ${block.hash}<br>
+                    🔄 <strong>Prev Hash:</strong> ${block.prevHash}<br>
+                    🔢 <strong>Transacciones:</strong> ${block.transactions}
+                `;
+
+                blockInfo.appendChild(blockDiv);
+                d3.select(event.target).classed("selected", true);
+            }
+        }
+
+        fetchBlockchain();
+    </script>
+
+</body>
+</html>

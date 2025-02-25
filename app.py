@@ -1,8 +1,13 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from blockchain import Blockchain
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates", static_folder="static")  # Agregar carpetas para HTML y JS
 blockchain = Blockchain()
+
+@app.route('/')
+def index():
+    """Carga la interfaz gráfica en el navegador."""
+    return render_template('index.html')  # Servir HTML
 
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
@@ -20,29 +25,32 @@ def mine_block():
 
 @app.route('/chain', methods=['GET'])
 def get_chain():
-    return jsonify({'chain': blockchain.chain, 'length': len(blockchain.chain)}), 200
+    # Agregar el hash calculado de cada bloque
+    chain_data = [
+        {
+            **block,
+            "hash": blockchain.hash_block(block)  # Añadir el hash del bloque
+        } for block in blockchain.chain
+    ]
+    return jsonify({'chain': chain_data, 'length': len(chain_data)}), 200
+
 
 @app.route('/validate', methods=['GET'])
 def validate_blockchain():
-    """Endpoint para validar la blockchain"""
     is_valid = blockchain.validar_blockchain()
     if is_valid:
         return jsonify({'message': 'La blockchain es válida ✅'}), 200
     else:
         return jsonify({'message': '⚠️ La blockchain ha sido modificada ❌'}), 400
-    
+
 @app.route('/modify_block', methods=['POST'])
 def modify_block():
-    """Modifica un bloque y recalcula su hash sin alterar el previous_hash del siguiente bloque."""
-    
     data = request.get_json()
-
     if not all(k in data for k in ["index", "campo", "nuevo_valor"]):
         return jsonify({"message": "Faltan parámetros en la solicitud ❌"}), 400
 
     resultado = blockchain.modificar_bloque(data["index"], data["campo"], data["nuevo_valor"])
     return jsonify(resultado)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
