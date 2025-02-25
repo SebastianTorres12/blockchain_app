@@ -16,7 +16,7 @@
         #sidebar {
             width: 350px;
             padding: 20px;
-            background-color: #ffffff;
+            background-color: #fffdfdf6;
             border-right: 3px solid #ddd;
             text-align: left;
             box-shadow: 2px 0px 10px rgba(0,0,0,0.1);
@@ -28,7 +28,7 @@
             margin-bottom: 10px;
         }
         .block-details {
-            background: #007bff;
+            background: #86ccdfec;
             color: white;
             border-radius: 8px;
             padding: 12px;
@@ -101,6 +101,8 @@
     </div>
 
     <script>
+        let selectedNodes = {};  // Almacena los nodos seleccionados
+
         async function fetchBlockchain() {
             const response = await fetch('/chain');
             const data = await response.json();
@@ -149,12 +151,12 @@
                     .on("drag", dragged)
                     .on("end", dragEnded));
 
-            node.append("circle")
+            const circles = node.append("circle")
                 .attr("r", 35)
                 .attr("fill", d => d.valid ? "#28a745" : "red")
                 .attr("stroke", "#fff")
                 .attr("stroke-width", 2)
-                .on("click", (event, d) => showBlockDetails(d));
+                .on("click", (event, d) => toggleBlockDetails(d, event.target));
 
             node.append("text")
                 .attr("dy", 5)
@@ -189,20 +191,41 @@
                 d.fy = null;
             }
 
-            function showBlockDetails(block) {
+            function toggleBlockDetails(block, nodeElement) {
+                if (selectedNodes[block.id]) {
+                    removeBlockDetails(block.id, nodeElement);
+                } else {
+                    selectedNodes[block.id] = true;
+                    showBlockDetails(block, nodeElement);
+                    d3.select(nodeElement).classed("selected", true);
+                }
+            }
+
+            function showBlockDetails(block, nodeElement) {
                 const blockDiv = document.createElement("div");
                 blockDiv.classList.add("block-details");
+                blockDiv.id = `block-${block.id}`;
                 blockDiv.innerHTML = `
-                    <button onclick="this.parentElement.remove()">X</button>
+                    <button onclick="removeBlockDetails(${block.id}, this)">X</button>
                     <strong>Bloque ${block.id}</strong><br>
                     🔗 <strong>Hash:</strong> ${block.hash}<br>
                     🔄 <strong>Prev Hash:</strong> ${block.prevHash}<br>
                     🔢 <strong>Transacciones:</strong> ${block.transactions}
                 `;
-
-                blockInfo.appendChild(blockDiv);
-                d3.select(event.target).classed("selected", true);
+                document.getElementById("block-info").appendChild(blockDiv);
             }
+        }
+
+        function removeBlockDetails(blockId, button) {
+            delete selectedNodes[blockId];
+            document.getElementById(`block-${blockId}`)?.remove();
+            
+            // Quita el borde amarillo del nodo
+            d3.selectAll("circle").each(function(d) {
+                if (d.id === blockId) {
+                    d3.select(this).classed("selected", false);
+                }
+            });
         }
 
         fetchBlockchain();
