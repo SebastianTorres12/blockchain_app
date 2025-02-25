@@ -20,7 +20,7 @@ Asegúrate de tener instalado **Python 3.8+** y **pip**.
 
 ### **2️⃣ Clonar el Repositorio**
 ```bash
-git clone https://github.com/SebastianTorres12/blockchain_app.git
+git clone https://github.com/tu_usuario/blockchain-flask
 cd blockchain-flask
 ```
 
@@ -65,13 +65,13 @@ Esta es la clase principal que modela la funcionalidad de la blockchain. Sus obj
 
 #### **Principales métodos:**
 - **`__init__()`**: Inicializa la blockchain con el bloque génesis y define la lista de transacciones pendientes.
-- **`create_block(proof, previous_hash)`**: Crea un nuevo bloque y lo añade a la blockchain.
-- **`add_transaction(sender, receiver, amount)`**: Agrega una transacción a la lista de transacciones pendientes.
+- **`create_block(proof, previous_hash)`**: Crea un nuevo bloque con una prueba de trabajo y lo añade a la blockchain.
+- **`add_transaction(sender, receiver, amount)`**: Agrega una nueva transacción a la lista de transacciones pendientes.
 - **`last_block`**: Devuelve el último bloque de la blockchain.
-- **`proof_of_work(previous_proof)`**: Implementa la prueba de trabajo (PoW) resolviendo un problema computacional para añadir un bloque.
-- **`hash_block(block)`**: Genera un hash único para cada bloque usando SHA-256.
-- **`validar_blockchain()`**: Revisa que todos los `previous_hash` coincidan con los `hash_actual` para garantizar la integridad.
-- **`modificar_bloque(index, campo, nuevo_valor)`**: Modifica un bloque y recalcula su hash sin afectar el previous_hash (para pruebas de seguridad).
+- **`proof_of_work(previous_proof)`**: Implementa el algoritmo de prueba de trabajo (PoW) resolviendo un problema computacional basado en el valor cuadrático de los proof previos.
+- **`hash_block(block)`**: Genera un hash único para cada bloque usando el algoritmo SHA-256, garantizando la seguridad de la información.
+- **`validar_blockchain()`**: Revisa que todos los `previous_hash` coincidan con los `hash_actual` de los bloques anteriores para garantizar la integridad de la cadena.
+- **`modificar_bloque(index, campo, nuevo_valor)`**: Modifica el contenido de un bloque específico y recalcula su hash sin afectar el `previous_hash` de los siguientes bloques para pruebas de seguridad.
 
 ### **📌 Clase Flask API**
 Se usa para exponer la funcionalidad de la blockchain a través de endpoints REST. Permite que los usuarios interactúen con la blockchain sin necesidad de modificar el código fuente.
@@ -111,7 +111,7 @@ python app.py
 ### **2️⃣ Cómo funciona**
 - Cada **bloque es un nodo** en el gráfico.
 - Se conecta con el anterior **si los hashes coinciden**.
-- Si hay inconsistencias, **el bloque aparecerá destacado de un color distinto**.
+- Si hay inconsistencias, **el bloque aparecerá aislado**.
 - Puedes **hacer clic en los nodos** para ver detalles en el panel lateral.
 
 ### **Ejemplo de visualización:**
@@ -119,6 +119,7 @@ python app.py
 🔴 Bloques desconectados = **Blockchain alterada** ❌
 
 ---
+
 ## 🎯 Conceptos Claves de Blockchain
 
 ### 🔹 **Bloques y Transacciones**
